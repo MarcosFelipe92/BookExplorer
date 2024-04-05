@@ -1,8 +1,8 @@
-import { User } from "@prisma/client";
+import { Book } from "@prisma/client";
 import { IError } from "../interfaces/errors/IError";
 
-export type UserResponseType = {
+export type BookResponseType = {
   error: boolean | IError;
   message: string;
-  user: User | null | User[];
+  book: Book | null | Book[];
 };

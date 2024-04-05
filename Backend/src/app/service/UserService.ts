@@ -3,17 +3,14 @@ import jwt from "jsonwebtoken";
 import { BadRequestError, NotFoundError } from "../helpers/api-errors";
 import UserRepository from "../repositories/UserRepository";
 import { LoginResponseType } from "../types/LoginResponseType";
-import { ResponseType } from "../types/RsponseType";
+import { UserResponseType } from "../types/RsponseType";
 import { userValidation } from "../validations/UserValidations";
+import { User } from "@prisma/client";
 
 class UserService {
-  public async create(
-    name: string,
-    email: string,
-    password: string
-  ): Promise<ResponseType> {
-    await userValidation.validate({ name, email, password });
-    const userExist = await UserRepository.validationEmail(email);
+  public async create(dataUser: User): Promise<UserResponseType> {
+    await userValidation.validate(dataUser);
+    const userExist = await UserRepository.validationEmail(dataUser.email);
     if (userExist) {
       return {
         error: true,
@@ -22,9 +19,9 @@ class UserService {
       };
     }
 
-    const hashPassword = await bcrypt.hash(password, 10);
+    dataUser.password = await bcrypt.hash(dataUser.password, 10);
 
-    const user = await UserRepository.create(name, email, hashPassword);
+    const user = await UserRepository.create(dataUser);
     return {
       error: false,
       message: "Sucesso: Usuário cadastrado com sucesso!",
@@ -32,7 +29,7 @@ class UserService {
     };
   }
 
-  public async findAll(): Promise<ResponseType> {
+  public async findAll(): Promise<UserResponseType> {
     const users = await UserRepository.findAll();
 
     return {
@@ -42,15 +39,11 @@ class UserService {
     };
   }
 
-  public async findById(id: number): Promise<ResponseType> {
+  public async findById(id: number): Promise<UserResponseType> {
     const user = await UserRepository.findById(id);
 
     if (!user) {
-      return {
-        error: true,
-        message: "Error: User não encontrado!",
-        user: null,
-      };
+      throw new NotFoundError("Usuário não encontrado");
     }
 
     return {
@@ -60,19 +53,14 @@ class UserService {
     };
   }
 
-  public async update(
-    id: number,
-    name: string,
-    email: string,
-    password: string
-  ): Promise<ResponseType> {
+  public async update(id: number, dataUser: User): Promise<UserResponseType> {
     const userExist = await UserRepository.findById(id);
 
     if (!userExist) {
       throw new NotFoundError("Usuário não encontrado");
     }
 
-    const user = await UserRepository.update(id, name, email, password);
+    const user = await UserRepository.update(id, dataUser);
 
     return {
       error: false,
@@ -81,7 +69,7 @@ class UserService {
     };
   }
 
-  public async delete(id: number): Promise<ResponseType> {
+  public async delete(id: number): Promise<UserResponseType> {
     const userExist = await UserRepository.findById(id);
 
     if (!userExist) {

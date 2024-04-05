@@ -1,13 +1,13 @@
 import { Request, Response } from "express";
-import UserService from "../service/UserService";
-import { User } from "@prisma/client";
+import BookService from "../service/BookService";
+import { Book } from "@prisma/client";
 
-class UserController {
+class BookController {
   public async create(req: Request, res: Response) {
-    const dataUser = req.body;
+    const dataBook = req.body as Book;
     let code = 201;
 
-    const { error, message, user } = await UserService.create(dataUser);
+    const { error, message, book } = await BookService.create(dataBook);
 
     if (error) {
       code = 400;
@@ -16,7 +16,7 @@ class UserController {
     return res.status(code).json({
       error,
       message,
-      user,
+      book,
     });
   }
 
@@ -24,37 +24,37 @@ class UserController {
     const id = Number(req.params.id);
     let code = 200;
 
-    const { user, error, message } = await UserService.findById(id);
+    const { book, error, message } = await BookService.findById(id);
     if (error) {
       code = 404;
     }
     return res.status(code).json({
       error,
       message,
-      user,
+      book,
     });
   }
 
   public async findAll(req: Request, res: Response) {
-    const { user, error, message } = await UserService.findAll();
+    const { book, error, message } = await BookService.findAll();
 
     return res.json({
       error,
       message,
-      user,
+      book,
     });
   }
 
   public async update(req: Request, res: Response) {
-    const dataUser = req.body as User;
+    const dataBook = req.body as Book;
     const id = Number(req.params.id);
 
-    const { error, message, user } = await UserService.update(id, dataUser);
+    const { error, message, book } = await BookService.update(id, dataBook);
 
     return res.json({
       error,
       message,
-      user,
+      book,
     });
   }
 
@@ -62,29 +62,16 @@ class UserController {
     const id = Number(req.params.id);
     let code = 200;
 
-    const { error, message, user } = await UserService.delete(id);
+    const { error, message, book } = await BookService.delete(id);
     if (error) {
       code = 404;
     }
     return res.status(code).json({
       error,
       message,
-      user,
+      book,
     });
-  }
-
-  public async login(req: Request, res: Response) {
-    const { email, password } = req.body;
-    const result = await UserService.login(email, password);
-
-    return res.json({
-      result,
-    });
-  }
-
-  public async getProfile(req: Request, res: Response) {
-    return res.json(req.user);
   }
 }
 
-export { UserController };
+export { BookController };
