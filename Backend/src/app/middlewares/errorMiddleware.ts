@@ -14,8 +14,7 @@ export const errorMiddleware = (
   if (error instanceof PrismaClientKnownRequestError) {
     if (error.code === "P2003") {
       statusCode = 400;
-      errorMessage =
-        "O usuário não pode ser excluído porque está associado a outros recursos.";
+      errorMessage = "Erro na associação de entidades.";
     }
   }
   return res.status(statusCode).json({ message: errorMessage });

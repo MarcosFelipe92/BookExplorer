@@ -1,6 +1,8 @@
-import { Request, Response } from "express";
-import BookService from "../service/BookService";
 import { Book } from "@prisma/client";
+import axios from "axios";
+import { Request, Response } from "express";
+import { BookVolume } from "../interfaces/books";
+import BookService from "../service/BookService";
 
 class BookController {
   public async create(req: Request, res: Response) {
@@ -71,6 +73,46 @@ class BookController {
       message,
       book,
     });
+  }
+
+  public async getBooksFromGoogleApi(req: Request, res: Response) {
+    const response = await axios.get(
+      "https://www.googleapis.com/books/v1/volumes?q=search+query"
+    );
+
+    const books = response.data.items.map((item: BookVolume) => {
+      return {
+        id: item.id,
+        title: item.volumeInfo.title,
+        author: item.volumeInfo.authors
+          ? item.volumeInfo.authors.join(", ")
+          : "Unknown Author",
+      };
+    });
+    return res.json(books);
+  }
+
+  public async getBooksSearchByParamsGoogleApi(req: Request, res: Response) {
+    const { title, author } = req.body;
+    const response = await axios.get(
+      "https://www.googleapis.com/books/v1/volumes",
+      {
+        params: {
+          q: `intitle:${title} inauthor:${author}`,
+        },
+      }
+    );
+
+    const books = response.data.items.map((item: BookVolume) => {
+      return {
+        id: item.id,
+        title: item.volumeInfo.title,
+        author: item.volumeInfo.authors
+          ? item.volumeInfo.authors.join(", ")
+          : "Unknown Author",
+      };
+    });
+    return res.json(books);
   }
 }
 
