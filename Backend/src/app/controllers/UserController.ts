@@ -1,10 +1,12 @@
 import { User } from "@prisma/client";
 import { Request, Response } from "express";
 import UserService from "../service/UserService";
+import { userValidation } from "../validations/UserValidations";
 
 class UserController {
   public async create(req: Request, res: Response) {
     const dataUser = req.body;
+    await userValidation.validate(dataUser);
 
     const { message, user } = await UserService.create(dataUser);
 

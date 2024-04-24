@@ -3,10 +3,12 @@ import axios from "axios";
 import { Request, Response } from "express";
 import { BookVolume } from "../interfaces/books";
 import BookService from "../service/BookService";
+import { bookValidation } from "../validations/BookValidation";
 
 class BookController {
   public async create(req: Request, res: Response) {
     const dataBook = req.body as Book;
+    await bookValidation.validate(dataBook);
 
     const { message, book } = await BookService.create(dataBook);
 

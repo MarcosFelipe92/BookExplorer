@@ -1,15 +1,13 @@
+import { User } from "@prisma/client";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { BadRequestError, NotFoundError } from "../helpers/api-errors";
 import UserRepository from "../repositories/UserRepository";
 import { LoginResponseType } from "../types/LoginResponseType";
 import { UserResponseType } from "../types/UserRsponseType";
-import { userValidation } from "../validations/UserValidations";
-import { User } from "@prisma/client";
 
 class UserService {
   public async create(dataUser: User): Promise<UserResponseType> {
-    await userValidation.validate(dataUser);
     const userExist = await UserRepository.validationEmail(dataUser.email);
     if (userExist) {
       throw new BadRequestError("Usuário já existe!");

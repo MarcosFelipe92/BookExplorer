@@ -6,7 +6,6 @@ import { bookValidation } from "../validations/BookValidation";
 
 class BookService {
   public async create(dataBook: Book): Promise<BookResponseType> {
-    await bookValidation.validate(dataBook);
     const bookExist = await BookRepository.findByTitle(dataBook.title);
     if (bookExist) {
       throw new BadRequestError("Livro já adicionado!");

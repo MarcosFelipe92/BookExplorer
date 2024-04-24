@@ -5,8 +5,3 @@ export const userValidation = yup.object({
   email: yup.string().required().email(),
   password: yup.string().required().min(6),
 });
-
-export const uloginValidation = yup.object({
-  email: yup.string().required().email(),
-  password: yup.string().required().min(6),
-});
