@@ -7,16 +7,10 @@ import BookService from "../service/BookService";
 class BookController {
   public async create(req: Request, res: Response) {
     const dataBook = req.body as Book;
-    let code = 201;
 
-    const { error, message, book } = await BookService.create(dataBook);
+    const { message, book } = await BookService.create(dataBook);
 
-    if (error) {
-      code = 400;
-    }
-
-    return res.status(code).json({
-      error,
+    return res.json({
       message,
       book,
     });
@@ -24,24 +18,19 @@ class BookController {
 
   public async findById(req: Request, res: Response) {
     const id = Number(req.params.id);
-    let code = 200;
 
-    const { book, error, message } = await BookService.findById(id);
-    if (error) {
-      code = 404;
-    }
-    return res.status(code).json({
-      error,
+    const { book, message } = await BookService.findById(id);
+
+    return res.json({
       message,
       book,
     });
   }
 
   public async findAll(req: Request, res: Response) {
-    const { book, error, message } = await BookService.findAll();
+    const { book, message } = await BookService.findAll();
 
     return res.json({
-      error,
       message,
       book,
     });
@@ -51,10 +40,9 @@ class BookController {
     const dataBook = req.body as Book;
     const id = Number(req.params.id);
 
-    const { error, message, book } = await BookService.update(id, dataBook);
+    const { message, book } = await BookService.update(id, dataBook);
 
     return res.json({
-      error,
       message,
       book,
     });
@@ -62,14 +50,10 @@ class BookController {
 
   public async delete(req: Request, res: Response) {
     const id = Number(req.params.id);
-    let code = 200;
 
-    const { error, message, book } = await BookService.delete(id);
-    if (error) {
-      code = 404;
-    }
-    return res.status(code).json({
-      error,
+    const { message, book } = await BookService.delete(id);
+
+    return res.json({
       message,
       book,
     });
@@ -87,6 +71,10 @@ class BookController {
         author: item.volumeInfo.authors
           ? item.volumeInfo.authors.join(", ")
           : "Unknown Author",
+        description: item.volumeInfo.description
+          ? item.volumeInfo.description
+          : "",
+        language: item.volumeInfo.language ? item.volumeInfo.language : "",
       };
     });
     return res.json(books);
@@ -110,8 +98,25 @@ class BookController {
         author: item.volumeInfo.authors
           ? item.volumeInfo.authors.join(", ")
           : "Unknown Author",
+        description: item.volumeInfo.description
+          ? item.volumeInfo.description
+          : "",
+        language: item.volumeInfo.language ? item.volumeInfo.language : "",
       };
     });
+    return res.json(books);
+  }
+
+  public async getBookCompleteSearchByParamsGoogleApi(
+    req: Request,
+    res: Response
+  ) {
+    const id = req.params.id;
+    const response = await axios.get(
+      `https://www.googleapis.com/books/v1/volumes/${id}`
+    );
+
+    const books = response.data;
     return res.json(books);
   }
 }

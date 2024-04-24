@@ -13,5 +13,9 @@ router.get(
   "/external/api/params",
   new BookController().getBooksSearchByParamsGoogleApi
 );
+router.get(
+  "/external/api/params/:id",
+  new BookController().getBookCompleteSearchByParamsGoogleApi
+);
 
 export default router;

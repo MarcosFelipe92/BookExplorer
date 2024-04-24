@@ -1,5 +1,5 @@
 import { Book } from "@prisma/client";
-import { NotFoundError } from "../helpers/api-errors";
+import { BadRequestError, NotFoundError } from "../helpers/api-errors";
 import BookRepository from "../repositories/BookRepository";
 import { BookResponseType } from "../types/BookRsponseType";
 import { bookValidation } from "../validations/BookValidation";
@@ -9,17 +9,12 @@ class BookService {
     await bookValidation.validate(dataBook);
     const bookExist = await BookRepository.findByTitle(dataBook.title);
     if (bookExist) {
-      return {
-        error: true,
-        message: "Erro: Livro já cadastrado!",
-        book: null,
-      };
+      throw new BadRequestError("Livro já adicionado!");
     }
 
     const book = await BookRepository.create(dataBook);
     return {
-      error: false,
-      message: "Sucesso: Livro salvo com sucesso!",
+      message: "Sucesso: Livro adicionado com sucesso!",
       book,
     };
   }
@@ -28,7 +23,6 @@ class BookService {
     const books = await BookRepository.findAll();
 
     return {
-      error: false,
       message: "Sucesso: Livros listados sucesso!",
       book: books,
     };
@@ -38,11 +32,10 @@ class BookService {
     const book = await BookRepository.findById(id);
 
     if (!book) {
-      throw new NotFoundError("Livro não encontrado");
+      throw new NotFoundError("Livro não encontrado!");
     }
 
     return {
-      error: false,
       message: "Sucesso: Livro encontrado com sucesso!",
       book,
     };
@@ -53,14 +46,13 @@ class BookService {
     const bookExist = await BookRepository.findById(id);
 
     if (!bookExist) {
-      throw new NotFoundError("Livro não encontrado");
+      throw new NotFoundError("Livro não encontrado!");
     }
 
     const book = await BookRepository.update(id, dataBook);
 
     return {
-      error: false,
-      message: "Sucesso: Usuário atualizado com sucesso!",
+      message: "Sucesso: Livro atualizado com sucesso!",
       book,
     };
   }
@@ -69,14 +61,13 @@ class BookService {
     const bookExist = await BookRepository.findById(id);
 
     if (!bookExist) {
-      throw new NotFoundError("Livro não encontrado");
+      throw new NotFoundError("Livro não encontrado!");
     }
 
     const book = await BookRepository.delete(id);
 
     return {
-      error: false,
-      message: "Sucesso: Usuário deletado com sucesso!",
+      message: "Sucesso: Livro deletado com sucesso!",
       book,
     };
   }

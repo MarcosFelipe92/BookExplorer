@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken";
 import { BadRequestError, NotFoundError } from "../helpers/api-errors";
 import UserRepository from "../repositories/UserRepository";
 import { LoginResponseType } from "../types/LoginResponseType";
-import { UserResponseType } from "../types/RsponseType";
+import { UserResponseType } from "../types/UserRsponseType";
 import { userValidation } from "../validations/UserValidations";
 import { User } from "@prisma/client";
 
@@ -12,18 +12,13 @@ class UserService {
     await userValidation.validate(dataUser);
     const userExist = await UserRepository.validationEmail(dataUser.email);
     if (userExist) {
-      return {
-        error: true,
-        message: "Erro: Email já cadastrado!",
-        user: null,
-      };
+      throw new BadRequestError("Usuário já existe!");
     }
 
     dataUser.password = await bcrypt.hash(dataUser.password, 10);
 
     const user = await UserRepository.create(dataUser);
     return {
-      error: false,
       message: "Sucesso: Usuário cadastrado com sucesso!",
       user,
     };
@@ -33,7 +28,6 @@ class UserService {
     const users = await UserRepository.findAll();
 
     return {
-      error: false,
       message: "Sucesso: Usuários listados sucesso!",
       user: users,
     };
@@ -47,7 +41,6 @@ class UserService {
     }
 
     return {
-      error: false,
       message: "Sucesso: Usuário encontrado com sucesso!",
       user,
     };
@@ -63,7 +56,6 @@ class UserService {
     const user = await UserRepository.update(id, dataUser);
 
     return {
-      error: false,
       message: "Sucesso: Usuário atualizado com sucesso!",
       user,
     };
@@ -79,7 +71,6 @@ class UserService {
     const user = await UserRepository.delete(id);
 
     return {
-      error: false,
       message: "Sucesso: Usuário deletado com sucesso!",
       user,
     };

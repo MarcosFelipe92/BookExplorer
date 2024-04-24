@@ -1,20 +1,14 @@
+import { User } from "@prisma/client";
 import { Request, Response } from "express";
 import UserService from "../service/UserService";
-import { User } from "@prisma/client";
 
 class UserController {
   public async create(req: Request, res: Response) {
     const dataUser = req.body;
-    let code = 201;
 
-    const { error, message, user } = await UserService.create(dataUser);
+    const { message, user } = await UserService.create(dataUser);
 
-    if (error) {
-      code = 400;
-    }
-
-    return res.status(code).json({
-      error,
+    return res.json({
       message,
       user,
     });
@@ -22,24 +16,18 @@ class UserController {
 
   public async findById(req: Request, res: Response) {
     const id = Number(req.params.id);
-    let code = 200;
 
-    const { user, error, message } = await UserService.findById(id);
-    if (error) {
-      code = 404;
-    }
-    return res.status(code).json({
-      error,
+    const { user, message } = await UserService.findById(id);
+    return res.json({
       message,
       user,
     });
   }
 
   public async findAll(req: Request, res: Response) {
-    const { user, error, message } = await UserService.findAll();
+    const { user, message } = await UserService.findAll();
 
     return res.json({
-      error,
       message,
       user,
     });
@@ -49,10 +37,9 @@ class UserController {
     const dataUser = req.body as User;
     const id = Number(req.params.id);
 
-    const { error, message, user } = await UserService.update(id, dataUser);
+    const { message, user } = await UserService.update(id, dataUser);
 
     return res.json({
-      error,
       message,
       user,
     });
@@ -60,14 +47,10 @@ class UserController {
 
   public async delete(req: Request, res: Response) {
     const id = Number(req.params.id);
-    let code = 200;
 
-    const { error, message, user } = await UserService.delete(id);
-    if (error) {
-      code = 404;
-    }
-    return res.status(code).json({
-      error,
+    const { message, user } = await UserService.delete(id);
+
+    return res.json({
       message,
       user,
     });

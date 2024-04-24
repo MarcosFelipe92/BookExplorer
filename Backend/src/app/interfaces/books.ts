@@ -2,6 +2,7 @@ interface VolumeInfo {
   title: string;
   authors: string[];
   publishedDate: string;
+  description: string;
   industryIdentifiers: {
     type: string;
     identifier: string;
