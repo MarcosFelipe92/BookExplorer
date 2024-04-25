@@ -1,12 +1,13 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import { EnvelopeSimple, LockSimple } from "phosphor-react";
+import { EnvelopeSimple, LockSimple, User } from "phosphor-react";
 import { useForm } from "react-hook-form";
 import toast, { Toaster } from "react-hot-toast";
-import { Input } from "../input";
+
+import { createUser } from "@/app/api/user/route";
+import { Input } from "@/components/input";
+import Link from "next/link";
 import { schemaLogin } from "./schema";
 import { LoginProps } from "./type";
 
@@ -25,23 +26,13 @@ export default function Form() {
     },
   });
 
-  const router = useRouter();
-
-  const handleFormSubmit = async ({ email, password }: LoginProps) => {
-    const result = await signIn("credentials", {
-      email,
-      password,
-      redirect: false,
-    });
-
-    if (result?.error) {
-      toast.error("Erro ao entrar! Usuário ao senha inválidos!", {
-        id: "error",
-      });
+  const handleFormSubmit = async ({ name, email, password }: LoginProps) => {
+    const { user, message } = await createUser(name, email, password);
+    if (!user) {
+      toast.error(message, { id: "error" });
       return;
     }
-
-    router.replace("/home");
+    toast.success(message, { id: "success" });
   };
 
   return (
@@ -51,6 +42,14 @@ export default function Form() {
         onSubmit={handleSubmit(handleFormSubmit)}
         className="flex flex-col w-[500px] mt-36 gap-3"
       >
+        <Input
+          {...register("name")}
+          type="text"
+          placeholder="Digite seu nome"
+          label="Nome"
+          startAdornment={<User />}
+        />
+        {errors.name && <p className="text-red-500">{errors.name.message}</p>}
         <Input
           {...register("email")}
           type="text"
@@ -74,8 +73,14 @@ export default function Form() {
           className="bg-[#1fe6dd] p-[6px] rounded-md mt-2 text-white text-xl"
           type="submit"
         >
-          Entrar
+          Cadastrar
         </button>
+        <Link
+          href="/"
+          className="bg-[#1fe6dd] p-[6px] text-xl text-white rounded-md mt-2 text-center"
+        >
+          Login
+        </Link>
       </form>
     </div>
   );

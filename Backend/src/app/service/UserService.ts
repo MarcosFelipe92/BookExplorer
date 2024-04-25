@@ -10,7 +10,7 @@ class UserService {
   public async create(dataUser: User): Promise<UserResponseType> {
     const userExist = await UserRepository.validationEmail(dataUser.email);
     if (userExist) {
-      throw new BadRequestError("Usuário já existe!");
+      throw new BadRequestError("Erro: Email de usuário já existe!");
     }
 
     dataUser.password = await bcrypt.hash(dataUser.password, 10);

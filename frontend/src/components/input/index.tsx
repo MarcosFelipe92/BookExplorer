@@ -1,19 +1,20 @@
 import { forwardRef, InputHTMLAttributes, ReactNode, useId } from "react";
+import * as S from "./styles";
 
 type InputProps = {
   label?: string;
   startAdornment?: ReactNode;
-  endAdorment?: ReactNode;
+  endAdornment?: ReactNode;
 } & InputHTMLAttributes<HTMLInputElement>;
 
 export const Input = forwardRef<HTMLInputElement, InputProps>(
   (
     {
-      type = "text",
       name = "",
       label = "",
+      type = "text",
       startAdornment,
-      endAdorment,
+      endAdornment,
       ...props
     },
     ref
@@ -21,23 +22,14 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
     const labelId = useId();
     return (
       <>
-        {label && <label htmlFor={labelId} className="text-[#707070]"></label>}
-        <div className="flex py-3 px-4 rounded-md border bg-white items-center focus-within:border-2 focus-within:border-[#1fe6dd] focus-within:relative">
+        {label && <S.Label htmlFor={labelId}>{label}</S.Label>}
+        <S.Container>
           {startAdornment && (
-            <span className="text-[#707070] mr-[0.4em]">{startAdornment}</span>
+            <S.StartAdornment>{startAdornment}</S.StartAdornment>
           )}
-          <input
-            ref={ref}
-            type={type}
-            name={name}
-            id={labelId}
-            {...props}
-            className="bg-transparent h-6 border-none outline-none w-full"
-          />
-          {endAdorment && (
-            <span className="text-[#707070] mr-[0.4em]">{endAdorment}</span>
-          )}
-        </div>
+          <S.Input ref={ref} type={type} name={name} id={labelId} {...props} />
+          {endAdornment && <S.EndAdornment>{endAdornment}</S.EndAdornment>}
+        </S.Container>
       </>
     );
   }

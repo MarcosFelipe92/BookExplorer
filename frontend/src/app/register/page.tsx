@@ -1,6 +1,5 @@
-import Form from "@/components/form";
-import { Alumni_Sans, Sedan } from "next/font/google";
-import Link from "next/link";
+import { Alumni_Sans } from "next/font/google";
+import Form from "./components/form";
 
 const font = Alumni_Sans({
   weight: "800",
@@ -8,7 +7,7 @@ const font = Alumni_Sans({
   style: "italic",
 });
 
-export default function Login() {
+export default function Register() {
   return (
     <main className="flex justify-between w-full ">
       <div className="bg-[url('/images/login.jpeg')] h-screen w-[900px] ">
@@ -21,9 +20,8 @@ export default function Login() {
           EXPLORER
         </h1>
       </div>
-      <div className="mx-auto mt-[10%] flex flex-col items-center gap-2 ">
+      <div className="mx-auto mt-[10%]">
         <Form />
-        <Link href="/register">Não possui conta?</Link>
       </div>
     </main>
   );
