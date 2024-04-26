@@ -9,7 +9,7 @@ router.get("/profile", authMiddleware, new UserController().getProfile);
 router.get("/", new UserController().findAll);
 router.get("/:id", new UserController().findById);
 router.post("/", new UserController().create);
-router.put("/:id", new UserController().update);
+router.put("/:id", authMiddleware, new UserController().update);
 router.delete("/:id", new UserController().delete);
 
 export default router;

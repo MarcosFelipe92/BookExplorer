@@ -1,3 +1,4 @@
+import { Session } from "inspector";
 import NextAuth, { NextAuthOptions } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 
@@ -23,7 +24,7 @@ const nextAuthOptions: NextAuthOptions = {
         const user = await response.json();
 
         if (user && response.ok) {
-          return user;
+          if (user) return user;
         }
 
         return null;
@@ -42,6 +43,9 @@ const nextAuthOptions: NextAuthOptions = {
       session = token.user as any;
       return session;
     },
+  },
+  session: {
+    maxAge: 8 * 60 * 60,
   },
 };
 

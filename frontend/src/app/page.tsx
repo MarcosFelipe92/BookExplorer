@@ -23,7 +23,12 @@ export default function Login() {
       </div>
       <div className="mx-auto mt-[10%] flex flex-col items-center gap-2 ">
         <Form />
-        <Link href="/register">Não possui conta?</Link>
+        <Link
+          href="/register"
+          className="p-[6px] text-xl rounded-md mt-2 text-center"
+        >
+          Não possui conta?
+        </Link>
       </div>
     </main>
   );

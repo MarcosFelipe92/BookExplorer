@@ -91,7 +91,7 @@ class UserService {
     }
 
     const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET ?? "", {
-      expiresIn: "8h",
+      expiresIn: "10s",
     });
 
     return {

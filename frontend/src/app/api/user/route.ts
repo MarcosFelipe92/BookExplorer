@@ -1,8 +1,20 @@
+type User = {
+  name: string;
+  email: string;
+  password: string;
+  books?: string;
+};
+
+type UserResponse = {
+  message: string;
+  user?: User;
+};
+
 export const createUser = async (
   name: string,
   email: string,
   password: string
-) => {
+): Promise<UserResponse> => {
   const response = await fetch("http://localhost:8080/users", {
     method: "POST",
     headers: {
@@ -15,7 +27,7 @@ export const createUser = async (
     }),
   });
 
-  const result = await response.json();
+  const result = (await response.json()) as UserResponse;
 
   return result;
 };

@@ -75,11 +75,8 @@ export default function Form() {
         >
           Cadastrar
         </button>
-        <Link
-          href="/"
-          className="bg-[#1fe6dd] p-[6px] text-xl text-white rounded-md mt-2 text-center"
-        >
-          Login
+        <Link href="/" className="p-[6px] text-xl rounded-md mt-2 text-center">
+          Ja possui conta?
         </Link>
       </form>
     </div>

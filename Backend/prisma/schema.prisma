@@ -33,7 +33,7 @@ model User {
   email String @unique
   password String
 
-  favorites Book[]
+  favorites Book[] 
 
   @@map("users")
 }

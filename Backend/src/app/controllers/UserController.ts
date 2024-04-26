@@ -59,11 +59,16 @@ class UserController {
   }
 
   public async login(req: Request, res: Response) {
-    const { email, password } = req.body;
-    const result = await UserService.login(email, password);
-
+    const body = req.body;
+    const { name, email, id, token } = await UserService.login(
+      body.email,
+      body.password
+    );
     return res.json({
-      result,
+      token,
+      email,
+      name,
+      id,
     });
   }
 

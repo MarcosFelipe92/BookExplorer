@@ -18,6 +18,9 @@ class UserRepository implements IUserRepository {
   public async findById(id: number): Promise<User | null> {
     const user = await prisma.user.findUnique({
       where: { id: Number(id) },
+      include: {
+        favorites: true,
+      },
     });
     return user;
   }
