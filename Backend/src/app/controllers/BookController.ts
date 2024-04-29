@@ -7,10 +7,11 @@ import { bookValidation } from "../validations/BookValidation";
 
 class BookController {
   public async create(req: Request, res: Response) {
-    const dataBook = req.body as Book;
+    const { dataAuthor, ...dataBook } = req.body;
+    dataBook as Book;
     await bookValidation.validate(dataBook);
 
-    const { message, book } = await BookService.create(dataBook);
+    const { message, book } = await BookService.create(dataBook, dataAuthor);
 
     return res.json({
       message,
@@ -63,7 +64,7 @@ class BookController {
 
   public async getBooksFromGoogleApi(req: Request, res: Response) {
     const response = await axios.get(
-      "https://www.googleapis.com/books/v1/volumes?q=search+query"
+      "https://www.googleapis.com/books/v1/volumes?q=search+query&maxResults=40&startIndex=0"
     );
 
     const books = response.data.items.map((item: BookVolume) => {
@@ -77,18 +78,20 @@ class BookController {
           ? item.volumeInfo.description
           : "",
         language: item.volumeInfo.language ? item.volumeInfo.language : "",
+        images: item.volumeInfo.imageLinks,
       };
     });
     return res.json(books);
   }
 
   public async getBooksSearchByParamsGoogleApi(req: Request, res: Response) {
-    const { title, author } = req.body;
+    const { title, author, limit } = req.query;
     const response = await axios.get(
       "https://www.googleapis.com/books/v1/volumes",
       {
         params: {
           q: `intitle:${title} inauthor:${author}`,
+          maxResults: limit,
         },
       }
     );
@@ -104,6 +107,7 @@ class BookController {
           ? item.volumeInfo.description
           : "",
         language: item.volumeInfo.language ? item.volumeInfo.language : "",
+        images: item.volumeInfo.imageLinks,
       };
     });
     return res.json(books);

@@ -51,6 +51,8 @@ class UserService {
       throw new NotFoundError("Usuário não encontrado");
     }
 
+    dataUser.password = await bcrypt.hash(dataUser.password, 10);
+
     const user = await UserRepository.update(id, dataUser);
 
     return {
@@ -91,7 +93,7 @@ class UserService {
     }
 
     const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET ?? "", {
-      expiresIn: "10s",
+      expiresIn: "8h",
     });
 
     return {

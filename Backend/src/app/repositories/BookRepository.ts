@@ -18,6 +18,9 @@ class BookRepository implements IBookRepository {
   public async findById(id: number): Promise<Book | null> {
     const book = await prisma.book.findUnique({
       where: { id: Number(id) },
+      include: {
+        authors: true,
+      },
     });
     return book;
   }

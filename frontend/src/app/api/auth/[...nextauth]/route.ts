@@ -1,4 +1,3 @@
-import { Session } from "inspector";
 import NextAuth, { NextAuthOptions } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 
@@ -24,7 +23,7 @@ const nextAuthOptions: NextAuthOptions = {
         const user = await response.json();
 
         if (user && response.ok) {
-          if (user) return user;
+          return user;
         }
 
         return null;
@@ -51,4 +50,4 @@ const nextAuthOptions: NextAuthOptions = {
 
 const handler = NextAuth(nextAuthOptions);
 
-export { handler as GET, handler as POST, nextAuthOptions };
+export { handler as GET, nextAuthOptions, handler as POST };

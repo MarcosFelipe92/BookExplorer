@@ -10,7 +10,7 @@ export default function HomeLayout({
     <html lang="en">
       <body>
         <NavBar />
-        <main className="min-h-screen flex flex-col items-center">
+        <main className="min-h-screen w-full flex flex-col items-center bg-slate-100">
           {children}
         </main>
         <Footer />

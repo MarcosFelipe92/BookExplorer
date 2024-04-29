@@ -1,8 +1,10 @@
+import { BookResponse } from "../book/route";
+
 type User = {
   name: string;
   email: string;
   password: string;
-  books?: string;
+  favorites: BookResponse[] | [];
 };
 
 type UserResponse = {
@@ -27,7 +29,15 @@ export const createUser = async (
     }),
   });
 
-  const result = (await response.json()) as UserResponse;
+  const data = (await response.json()) as UserResponse;
 
-  return result;
+  return data;
+};
+
+export const findUserById = async (id: number): Promise<UserResponse> => {
+  const response = await fetch(`http://localhost:8080/users/${id}`);
+
+  const data = (await response.json()) as UserResponse;
+
+  return data;
 };

@@ -1,17 +1,26 @@
-import { Book } from "@prisma/client";
+import { Author, Book } from "@prisma/client";
 import { BadRequestError, NotFoundError } from "../helpers/api-errors";
 import BookRepository from "../repositories/BookRepository";
 import { BookResponseType } from "../types/BookRsponseType";
 import { bookValidation } from "../validations/BookValidation";
+import AuthorRepository from "../repositories/AuthorRepository";
 
 class BookService {
-  public async create(dataBook: Book): Promise<BookResponseType> {
+  public async create(
+    dataBook: Book,
+    dataAuthor: Author
+  ): Promise<BookResponseType> {
     const bookExist = await BookRepository.findByTitle(dataBook.title);
+
     if (bookExist) {
       throw new BadRequestError("Livro já adicionado!");
     }
 
+    const author = await AuthorRepository.create(dataAuthor);
     const book = await BookRepository.create(dataBook);
+    author.bookId = book.id;
+    await AuthorRepository.update(author.id, author);
+
     return {
       message: "Sucesso: Livro adicionado com sucesso!",
       book,

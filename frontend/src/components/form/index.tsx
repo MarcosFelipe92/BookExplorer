@@ -41,7 +41,7 @@ export default function Form() {
       return;
     }
 
-    router.replace("/home");
+    router.replace("/books");
   };
 
   return (

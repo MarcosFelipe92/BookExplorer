@@ -13,20 +13,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Book {
-  id Int @id @default(autoincrement())
-  title String
-  authors String
-  publishedDate String
-  description String?
-  language String
-  userId Int
-
-  user User @relation(fields: [userId], references: [id])
-
-  @@map("books")
-}
-
 model User {
   id Int @id @default(autoincrement())
   name String 
@@ -36,4 +22,30 @@ model User {
   favorites Book[] 
 
   @@map("users")
+}
+
+model Book {
+  id Int @id @default(autoincrement())
+  title String
+  publishedDate String?
+  description String?
+  language String
+  smallThumbnail String?
+  thumbnail String?
+  userId Int
+  authors Author[]
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@map("books")
+}
+
+
+model Author {
+  id Int @id @default(autoincrement())
+  name String
+  bookId Int?
+  book Book? @relation(fields: [bookId], references: [id]) 
+
+  @@map("authors")
 }

@@ -10,7 +10,4 @@ services:
     ports:
       - "3309:3306"
     volumes:
-      - ./mysql:/var/lib/mysql
-
-volumes:
-  mysql:
+      - C:/vsCode/Projetos/BookExplorer/backend/mysql:/var/lib/mysql

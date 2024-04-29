@@ -1,9 +1,12 @@
 import NextAuthSessionProvider from "@/providers/sessionProvider";
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Roboto } from "next/font/google";
 import "./globals.css";
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Roboto({
+  weight: ["400", "700", "900", "300"],
+  subsets: ["latin"],
+});
 
 export const metadata: Metadata = {
   title: "Book Explore, sua biblioteca virtual",

@@ -11,6 +11,10 @@ interface VolumeInfo {
     text: boolean;
     image: boolean;
   };
+  imageLinks: {
+    smallThumbnail: string;
+    thumbnail: string;
+  };
   printType: string;
   maturityRating: string;
   allowAnonLogging: boolean;
