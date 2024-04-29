@@ -55,7 +55,7 @@ type FavoritesButtonProps = {
 };
 
 export const FavoritesButton = ({ className, book }: FavoritesButtonProps) => {
-  const authors = book.volumeInfo.authors.map((author) => ({
+  const authors = book.volumeInfo.authors?.map((author) => ({
     name: author,
   })) as Author[];
 

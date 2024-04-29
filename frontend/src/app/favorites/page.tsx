@@ -4,7 +4,7 @@ import Link from "next/link";
 import { nextAuthOptions } from "../api/auth/[...nextauth]/route";
 import { findUserById } from "../api/user/route";
 import { SessionType } from "../books/types";
-import { DeleteButton } from "@/components/deleteButton";
+import { DeleteButton } from "@/app/favorites/components/deleteButton";
 
 export default async function Favorites() {
   const session = await getServerSession(nextAuthOptions);

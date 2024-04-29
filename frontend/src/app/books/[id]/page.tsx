@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { findGoogleBookDetails } from "../../api/book/route";
-import { BackButton } from "@/components/backButton";
-import { FavoritesButton } from "@/components/favoritesButton";
+import { BackButton } from "@/app/books/components/backButton";
+import { FavoritesButton } from "@/app/books/components/favoriteButton";
 import { getServerSession } from "next-auth";
 import { nextAuthOptions } from "@/app/api/auth/[...nextauth]/route";
 import { SessionType } from "../types";
