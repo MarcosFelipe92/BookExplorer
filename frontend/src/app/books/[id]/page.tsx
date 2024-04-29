@@ -1,7 +1,5 @@
 import Image from "next/image";
 import { findGoogleBookDetails } from "../../api/book/route";
-import Link from "next/link";
-import { CaretLeft } from "phosphor-react";
 import { BackButton } from "@/components/backButton";
 import { FavoritesButton } from "@/components/favoritesButton";
 import { getServerSession } from "next-auth";
@@ -25,7 +23,11 @@ export default async function BookDetails({
   if (!url) {
     url = `/images/capa.jpeg`;
   }
-  const dataBook = { volumeInfo: data.volumeInfo, userId: dataSession.id };
+  const dataBook = {
+    id: data.id,
+    volumeInfo: data.volumeInfo,
+    userId: dataSession.id,
+  };
 
   return (
     <>
@@ -33,7 +35,7 @@ export default async function BookDetails({
         <div className="flex justify-between">
           <BackButton className="flex items-center text-2xl text-white hover:text-yellow-500 mb-4" />
           <FavoritesButton
-            className="flex items-center text-2xl gap-2 text-white hover:text-yellow-500"
+            className="flex items-center text-3xl gap-2 text-white hover:text-yellow-500 mr-4"
             book={dataBook}
           />
         </div>

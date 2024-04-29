@@ -1,10 +1,10 @@
-import { BookResponse } from "../book/route";
+import { Book } from "../book/types";
 
 type User = {
   name: string;
   email: string;
   password: string;
-  favorites: BookResponse[] | [];
+  favorites: Book[] | [];
 };
 
 type UserResponse = {

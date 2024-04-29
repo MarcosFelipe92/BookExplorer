@@ -1,11 +1,14 @@
 "use client";
 
 import { createBook } from "@/app/api/book/route";
+import { Author } from "@/app/api/book/types";
 import { Heart } from "phosphor-react";
+import toast, { Toaster } from "react-hot-toast";
 
 type FavoritesButtonProps = {
   className?: string;
   book: {
+    id: string;
     volumeInfo: {
       title: string;
       authors: string[];
@@ -52,23 +55,30 @@ type FavoritesButtonProps = {
 };
 
 export const FavoritesButton = ({ className, book }: FavoritesButtonProps) => {
+  const authors = book.volumeInfo.authors.map((author) => ({
+    name: author,
+  })) as Author[];
+
+  const handleClick = async () => {
+    const res = await createBook(
+      book.id,
+      book.volumeInfo.title,
+      authors,
+      book.volumeInfo.publishedDate,
+      book.volumeInfo.description,
+      book.volumeInfo.language,
+      book.volumeInfo.imageLinks.smallThumbnail,
+      book.volumeInfo.imageLinks.thumbnail,
+      book.userId
+    );
+    if (res) {
+      toast.success("Livro adicionado aos favoritos");
+    }
+  };
+
   return (
-    <button
-      className={className}
-      onClick={() =>
-        createBook(
-          book.volumeInfo.title,
-          book.volumeInfo.authors,
-          book.volumeInfo.publishedDate,
-          book.volumeInfo.description,
-          book.volumeInfo.language,
-          book.volumeInfo.imageLinks.smallThumbnail,
-          book.volumeInfo.imageLinks.thumbnail,
-          book.userId
-        )
-      }
-    >
-      Favoritos
+    <button className={className} onClick={handleClick}>
+      <Toaster />
       <Heart />
     </button>
   );

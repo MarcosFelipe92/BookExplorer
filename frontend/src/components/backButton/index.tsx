@@ -12,7 +12,8 @@ export const BackButton = ({ className }: BackButtonProps) => {
 
   return (
     <button className={className} onClick={() => router.back()}>
-      <CaretLeft /> Voltar
+      <CaretLeft />
+      <span>Voltar</span>
     </button>
   );
 };

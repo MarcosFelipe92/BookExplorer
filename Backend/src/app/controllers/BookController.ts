@@ -7,11 +7,11 @@ import { bookValidation } from "../validations/BookValidation";
 
 class BookController {
   public async create(req: Request, res: Response) {
-    const { dataAuthor, ...dataBook } = req.body;
+    const { authors, ...dataBook } = req.body;
     dataBook as Book;
     await bookValidation.validate(dataBook);
 
-    const { message, book } = await BookService.create(dataBook, dataAuthor);
+    const { message, book } = await BookService.create(dataBook, authors);
 
     return res.json({
       message,
@@ -20,7 +20,7 @@ class BookController {
   }
 
   public async findById(req: Request, res: Response) {
-    const id = Number(req.params.id);
+    const id = req.params.id;
 
     const { book, message } = await BookService.findById(id);
 
@@ -41,7 +41,7 @@ class BookController {
 
   public async update(req: Request, res: Response) {
     const dataBook = req.body as Book;
-    const id = Number(req.params.id);
+    const id = req.params.id;
 
     const { message, book } = await BookService.update(id, dataBook);
 
@@ -52,7 +52,7 @@ class BookController {
   }
 
   public async delete(req: Request, res: Response) {
-    const id = Number(req.params.id);
+    const id = req.params.id;
 
     const { message, book } = await BookService.delete(id);
 

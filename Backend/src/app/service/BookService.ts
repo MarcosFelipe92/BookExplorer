@@ -8,7 +8,7 @@ import AuthorRepository from "../repositories/AuthorRepository";
 class BookService {
   public async create(
     dataBook: Book,
-    dataAuthor: Author
+    dataAuthors: Author[]
   ): Promise<BookResponseType> {
     const bookExist = await BookRepository.findByTitle(dataBook.title);
 
@@ -16,10 +16,16 @@ class BookService {
       throw new BadRequestError("Livro já adicionado!");
     }
 
-    const author = await AuthorRepository.create(dataAuthor);
+    const authorsPromises = dataAuthors.map(async (author) => {
+      return AuthorRepository.create(author);
+    });
+
+    const authors = await Promise.all(authorsPromises);
     const book = await BookRepository.create(dataBook);
-    author.bookId = book.id;
-    await AuthorRepository.update(author.id, author);
+    authors.map((author) => (author.bookId = book.id));
+    authors.map(
+      async (author) => await AuthorRepository.update(author.id, author)
+    );
 
     return {
       message: "Sucesso: Livro adicionado com sucesso!",
@@ -36,7 +42,7 @@ class BookService {
     };
   }
 
-  public async findById(id: number): Promise<BookResponseType> {
+  public async findById(id: string): Promise<BookResponseType> {
     const book = await BookRepository.findById(id);
 
     if (!book) {
@@ -49,7 +55,7 @@ class BookService {
     };
   }
 
-  public async update(id: number, dataBook: Book): Promise<BookResponseType> {
+  public async update(id: string, dataBook: Book): Promise<BookResponseType> {
     await bookValidation.validate(dataBook);
     const bookExist = await BookRepository.findById(id);
 
@@ -65,7 +71,7 @@ class BookService {
     };
   }
 
-  public async delete(id: number): Promise<BookResponseType> {
+  public async delete(id: string): Promise<BookResponseType> {
     const bookExist = await BookRepository.findById(id);
 
     if (!bookExist) {

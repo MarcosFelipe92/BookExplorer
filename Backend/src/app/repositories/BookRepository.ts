@@ -15,9 +15,9 @@ class BookRepository implements IBookRepository {
     return books;
   }
 
-  public async findById(id: number): Promise<Book | null> {
+  public async findById(id: string): Promise<Book | null> {
     const book = await prisma.book.findUnique({
-      where: { id: Number(id) },
+      where: { id: id },
       include: {
         authors: true,
       },
@@ -25,20 +25,20 @@ class BookRepository implements IBookRepository {
     return book;
   }
 
-  public async update(id: number, dataBook: Book): Promise<Book> {
+  public async update(id: string, dataBook: Book): Promise<Book> {
     const book = await prisma.book.update({
       where: {
-        id: Number(id),
+        id: id,
       },
       data: dataBook,
     });
     return book;
   }
 
-  public async delete(id: number): Promise<Book> {
+  public async delete(id: string): Promise<Book> {
     const book = await prisma.book.delete({
       where: {
-        id: Number(id),
+        id: id,
       },
     });
     return book;

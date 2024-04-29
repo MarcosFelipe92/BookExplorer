@@ -25,13 +25,13 @@ model User {
 }
 
 model Book {
-  id Int @id @default(autoincrement())
-  title String
+  id String @id 
+  title String  @db.VarChar(500)
   publishedDate String?
-  description String?
+  description String? @db.Text
   language String
-  smallThumbnail String?
-  thumbnail String?
+  smallThumbnail String?  @db.Text
+  thumbnail String?  @db.Text
   userId Int
   authors Author[]
 
@@ -44,7 +44,7 @@ model Book {
 model Author {
   id Int @id @default(autoincrement())
   name String
-  bookId Int?
+  bookId String?
   book Book? @relation(fields: [bookId], references: [id]) 
 
   @@map("authors")

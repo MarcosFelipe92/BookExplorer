@@ -1,110 +1,9 @@
-export type BookResponse = {
-  id: string;
-  title: string;
-  author: string;
-  description: string;
-  language: string;
-  images: {
-    smallThumbnail: string;
-    thumbnail: string;
-  };
-};
-
-type BookVolume = {
-  kind: string;
-  id: string;
-  etag: string;
-  selfLink: string;
-  volumeInfo: {
-    title: string;
-    authors: string[];
-    publisher: string;
-    publishedDate: string;
-    description: string;
-    industryIdentifiers: {
-      type: string;
-      identifier: string;
-    }[];
-    readingModes: {
-      text: boolean;
-      image: boolean;
-    };
-    pageCount: number;
-    printedPageCount: number;
-    dimensions: {
-      height: string;
-    };
-    printType: string;
-    categories: string[];
-    maturityRating: string;
-    allowAnonLogging: boolean;
-    contentVersion: string;
-    panelizationSummary: {
-      containsEpubBubbles: boolean;
-      containsImageBubbles: boolean;
-    };
-    imageLinks: {
-      smallThumbnail: string;
-      thumbnail: string;
-      small: string;
-      medium: string;
-      large: string;
-      extraLarge: string;
-    };
-    language: string;
-    previewLink: string;
-    infoLink: string;
-    canonicalVolumeLink: string;
-  };
-  saleInfo: {
-    country: string;
-    saleability: string;
-    isEbook: boolean;
-    listPrice: {
-      amount: number;
-      currencyCode: string;
-    };
-    retailPrice: {
-      amount: number;
-      currencyCode: string;
-    };
-    buyLink: string;
-    offers: {
-      finskyOfferType: number;
-      listPrice: {
-        amountInMicros: number;
-        currencyCode: string;
-      };
-      retailPrice: {
-        amountInMicros: number;
-        currencyCode: string;
-      };
-      giftable: boolean;
-    }[];
-  };
-  accessInfo: {
-    country: string;
-    viewability: string;
-    embeddable: boolean;
-    publicDomain: boolean;
-    textToSpeechPermission: string;
-    epub: {
-      isAvailable: boolean;
-      acsTokenLink?: string;
-    };
-    pdf: {
-      isAvailable: boolean;
-      acsTokenLink?: string;
-    };
-    webReaderLink: string;
-    accessViewStatus: string;
-    quoteSharingAllowed: boolean;
-  };
-};
+import { Author, Book, BookResponse, BookVolume } from "./types";
 
 export const createBook = async (
+  id: string,
   title: string,
-  author: string[],
+  authors: Author[],
   publishedDate: string,
   description: string,
   language: string,
@@ -116,8 +15,9 @@ export const createBook = async (
     method: "POST",
     headers: { "Content-type": "application/json" },
     body: JSON.stringify({
+      id,
       title,
-      author,
+      authors,
       publishedDate,
       description,
       language,
@@ -129,6 +29,26 @@ export const createBook = async (
 
   const data = await response.json();
   console.log(data);
+
+  return data;
+};
+
+export const findBookById = async (id: string): Promise<Book> => {
+  const response = await fetch(`http://localhost:8080/books/${id}`, {
+    method: "GET",
+  });
+
+  const data = await response.json();
+
+  return data;
+};
+
+export const deleteBook = async (id: string) => {
+  const response = await fetch(`http://localhost:8080/books/${id}`, {
+    method: "DELETE",
+  });
+
+  const data = await response.json();
 
   return data;
 };
