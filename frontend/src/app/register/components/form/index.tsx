@@ -8,25 +8,25 @@ import toast, { Toaster } from "react-hot-toast";
 import { createUser } from "@/app/api/user/route";
 import { Input } from "@/components/input";
 import Link from "next/link";
-import { schemaLogin } from "./schema";
-import { LoginProps } from "./type";
+import { schemaRegister } from "./schema";
+import { RegisterProps } from "./type";
 
-export default function Form() {
+export default function RegisterForm() {
   const {
     handleSubmit,
     register,
     formState: { errors },
-  } = useForm<LoginProps>({
+  } = useForm<RegisterProps>({
     criteriaMode: "all",
     mode: "all",
-    resolver: zodResolver(schemaLogin),
+    resolver: zodResolver(schemaRegister),
     defaultValues: {
       email: "",
       password: "",
     },
   });
 
-  const handleFormSubmit = async ({ name, email, password }: LoginProps) => {
+  const handleFormSubmit = async ({ name, email, password }: RegisterProps) => {
     const { user, message } = await createUser(name, email, password);
     if (!user) {
       toast.error(message, { id: "error" });

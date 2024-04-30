@@ -1,4 +1,4 @@
 import { z } from "zod";
-import { schemaLogin } from "./schema";
+import { schemaRegister } from "./schema";
 
-export type LoginProps = z.infer<typeof schemaLogin>;
+export type RegisterProps = z.infer<typeof schemaRegister>;

@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const schemaLogin = z
+export const schemaRegister = z
   .object({
     name: z.string().min(1, "Por favor insira um nome válido"),
     email: z

@@ -41,7 +41,7 @@ class AuthorRepository implements IAuthorRepository {
     return author;
   }
 
-  public async findByBookId(bookId: number): Promise<Author | null> {
+  public async findByBookId(bookId: string): Promise<Author | null> {
     const author = await prisma.author.findFirst({
       where: {
         bookId: bookId,

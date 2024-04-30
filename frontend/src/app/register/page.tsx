@@ -1,5 +1,5 @@
 import { Alumni_Sans } from "next/font/google";
-import Form from "./components/form";
+import RegisterForm from "./components/form";
 
 const font = Alumni_Sans({
   weight: "800",
@@ -21,7 +21,7 @@ export default function Register() {
         </h1>
       </div>
       <div className="mx-auto mt-[10%]">
-        <Form />
+        <RegisterForm />
       </div>
     </main>
   );

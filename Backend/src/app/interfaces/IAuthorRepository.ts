@@ -6,5 +6,5 @@ export interface IAuthorRepository {
   findById(id: number): Promise<Author | null>;
   update(id: number, author: Author): Promise<Author>;
   delete(id: number): Promise<Author>;
-  findByBookId(bookId: number): Promise<Author | null>;
+  findByBookId(bookId: string): Promise<Author | null>;
 }
