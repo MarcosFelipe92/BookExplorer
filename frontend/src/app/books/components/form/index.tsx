@@ -1,15 +1,12 @@
 "use client";
 
+import { findGoogleBookByParams } from "@/app/api/book/route";
+import { Input } from "@/components/input";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
 import { EnvelopeSimple, LockSimple } from "phosphor-react";
 import { useForm } from "react-hook-form";
-import toast, { Toaster } from "react-hot-toast";
-import { Input } from "@/components/input";
-import { SearchProps } from "./type";
 import { schemaSearch } from "./schema";
-import { findGoogleBookByParams } from "@/app/api/book/route";
+import { SearchProps } from "./type";
 
 export default function SearchForm() {
   const {
@@ -26,10 +23,11 @@ export default function SearchForm() {
     },
   });
 
-  const router = useRouter();
-
   const handleFormSubmit = async ({ title, author }: SearchProps) => {
-    const result = await findGoogleBookByParams(title, author);
+    const books = await findGoogleBookByParams(title, author);
+    console.log(books);
+
+    return books;
   };
 
   return (

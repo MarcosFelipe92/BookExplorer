@@ -1,22 +1,44 @@
-import { getServerSession } from "next-auth";
+import { getServerSession, Session } from "next-auth";
 import Image from "next/image";
 import Link from "next/link";
 import { nextAuthOptions } from "../api/auth/[...nextauth]/route";
-import { findGoogleBook } from "../api/book/route";
+import { findGoogleBook, findGoogleBookByParams } from "../api/book/route";
 import { SessionType } from "./types";
+import { BookResponse } from "../api/book/types";
+import SearchForm from "./components/form";
+
+export async function getData(title = "", author = "") {
+  const session = await getServerSession(nextAuthOptions);
+  let books = [] as unknown as BookResponse[];
+
+  try {
+    books = await findGoogleBookByParams(title, author);
+  } catch (error) {
+    console.error("Error loading initial books:", error);
+  }
+
+  return {
+    props: {
+      books,
+      session,
+    },
+  };
+}
 
 export default async function Book() {
-  const session = await getServerSession(nextAuthOptions);
+  const {
+    props: { books, session },
+  } = await getData();
   const dataSession = session as unknown as SessionType;
-  const data = await findGoogleBook();
 
   return (
     <>
+      <SearchForm />
       <h1 className="text-3xl pt-6">
         Olá {dataSession?.name}, seja bem vindo!
       </h1>
       <div className="flex flex-wrap justify-center w-full">
-        {data.map((book) => {
+        {books.map((book) => {
           let url = book.images?.thumbnail
             ? book.images?.thumbnail
             : book.images?.smallThumbnail;
