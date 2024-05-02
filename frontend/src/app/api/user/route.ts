@@ -17,21 +17,27 @@ export const createUser = async (
   email: string,
   password: string
 ): Promise<UserResponse> => {
-  const response = await fetch("http://localhost:8080/users", {
-    method: "POST",
-    headers: {
-      "Content-type": "application/json",
-    },
-    body: JSON.stringify({
-      name,
-      email,
-      password,
-    }),
-  });
+  try {
+    const response = await fetch("http://localhost:8080/users", {
+      method: "POST",
+      headers: {
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify({
+        name,
+        email,
+        password,
+      }),
+    });
 
-  const data = (await response.json()) as UserResponse;
+    const data = (await response.json()) as UserResponse;
 
-  return data;
+    return data;
+  } catch (error) {
+    return {
+      message: "Ocorreu um erro inesperado, tente novamente mais tarde.",
+    };
+  }
 };
 
 export const findUserById = async (id: number): Promise<UserResponse> => {

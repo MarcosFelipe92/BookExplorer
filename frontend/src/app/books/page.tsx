@@ -1,21 +1,17 @@
-import { getServerSession, Session } from "next-auth";
+import { getServerSession } from "next-auth";
 import Image from "next/image";
 import Link from "next/link";
 import { nextAuthOptions } from "../api/auth/[...nextauth]/route";
-import { findGoogleBook, findGoogleBookByParams } from "../api/book/route";
-import { SessionType } from "./types";
+import { findGoogleBookByParams } from "../api/book/route";
 import { BookResponse } from "../api/book/types";
 import SearchForm from "./components/form";
+import { SessionType } from "./types";
 
 export async function getData(title = "", author = "") {
   const session = await getServerSession(nextAuthOptions);
   let books = [] as unknown as BookResponse[];
 
-  try {
-    books = await findGoogleBookByParams(title, author);
-  } catch (error) {
-    console.error("Error loading initial books:", error);
-  }
+  books = await findGoogleBookByParams(title, author);
 
   return {
     props: {
@@ -33,7 +29,6 @@ export default async function Book() {
 
   return (
     <>
-      <SearchForm />
       <h1 className="text-3xl pt-6">
         Olá {dataSession?.name}, seja bem vindo!
       </h1>

@@ -11,10 +11,14 @@ type DeleteButtonProps = {
 
 export const DeleteButton = ({ className, id }: DeleteButtonProps) => {
   const handleClick = async () => {
-    const res = await deleteBook(id);
+    try {
+      const res = await deleteBook(id);
 
-    if (res.book) {
-      window.location.reload();
+      if (res.book) {
+        window.location.reload();
+      }
+    } catch (error) {
+      toast.error("Erro ao remover livro tente novamente mais tarde");
     }
   };
   return (

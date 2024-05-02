@@ -19,7 +19,6 @@ const nextAuthOptions: NextAuthOptions = {
             password: credentials?.password,
           }),
         });
-
         const user = await response.json();
 
         if (user && response.ok) {
