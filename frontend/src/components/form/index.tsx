@@ -44,6 +44,16 @@ export default function Form() {
     router.replace("/books");
   };
 
+  const login = async () => {
+    const result = await signIn("credentials", {
+      email: "demo@example.com",
+      password: "123456",
+      redirect: false,
+    });
+
+    router.replace("/books");
+  };
+
   return (
     <div>
       <Toaster />
@@ -77,6 +87,13 @@ export default function Form() {
           Entrar
         </button>
       </form>
+      <div className="bg-gray-500 h-[1px] mt-2"></div>
+      <button
+        className="w-[500px] bg-[#1fe6dd] p-[6px] rounded-md mt-2 text-white text-xl"
+        onClick={login}
+      >
+        Entrar sem login
+      </button>
     </div>
   );
 }
