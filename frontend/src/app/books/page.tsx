@@ -1,11 +1,18 @@
-import { getServerSession } from "next-auth";
+"use client";
+
+import { nextAuthOptions } from "@/next-auth-options";
+import { getServerSession, Session } from "next-auth";
 import Image from "next/image";
 import Link from "next/link";
-import { nextAuthOptions } from "../api/auth/[...nextauth]/route";
-import { findGoogleBookByParams } from "../api/book/route";
-import { BookResponse } from "../api/book/types";
-import SearchForm from "./components/form";
+import { BookResponse } from "../../actions/book/types";
 import { SessionType } from "./types";
+import {
+  findGoogleBook,
+  findGoogleBookByParams,
+} from "@/actions/book/book-actions";
+import { useEffect, useState } from "react";
+import SearchForm from "@/components/search-form";
+import { useSession } from "next-auth/react";
 
 export async function getData(title = "", author = "") {
   const session = await getServerSession(nextAuthOptions);
@@ -21,19 +28,37 @@ export async function getData(title = "", author = "") {
   };
 }
 
-export default async function Book() {
-  const {
-    props: { books, session },
-  } = await getData();
-  const dataSession = session as unknown as SessionType;
+export default function Book() {
+  const { data: session } = useSession();
+  const [allBooks, setAllBooks] = useState<BookResponse[]>([]);
+  const [filteredBooks, setFilteredBooks] = useState<BookResponse[]>([]);
+
+  useEffect(() => {
+    const fetchBooks = async () => {
+      const books = await findGoogleBook();
+      setAllBooks(books);
+      setFilteredBooks(books);
+    };
+    fetchBooks();
+  }, []);
+
+  const handleSearch = async (title: string, author?: string) => {
+    if (title === "") {
+      setFilteredBooks(allBooks);
+    } else {
+      const filtered = await findGoogleBookByParams(title, author);
+      setFilteredBooks(filtered);
+    }
+  };
 
   return (
     <>
       <h1 className="text-3xl pt-6">
-        Olá {dataSession?.name}, seja bem vindo!
+        Olá {session?.user?.name}, seja bem vindo!
       </h1>
+      <SearchForm onSearch={handleSearch} />
       <div className="flex flex-wrap justify-center w-full">
-        {books.map((book) => {
+        {filteredBooks.map((book) => {
           let url = book.images?.thumbnail
             ? book.images?.thumbnail
             : book.images?.smallThumbnail;

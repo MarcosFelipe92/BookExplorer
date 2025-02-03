@@ -1,57 +1,44 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import { EnvelopeSimple, LockSimple } from "phosphor-react";
+import { EnvelopeSimple, LockSimple, User } from "phosphor-react";
 import { useForm } from "react-hook-form";
 import toast, { Toaster } from "react-hot-toast";
-import { Input } from "../input";
-import { schemaLogin } from "./schema";
-import { LoginProps } from "./type";
 
-export default function Form() {
+import { Input } from "@/components/input";
+import Link from "next/link";
+import { schemaRegister } from "./schema";
+import { RegisterProps } from "./type";
+import { createUser } from "@/actions/user/user-actions";
+import { useRouter } from "next/navigation";
+
+export default function RegisterForm() {
+  const router = useRouter();
+
   const {
     handleSubmit,
     register,
     formState: { errors },
-  } = useForm<LoginProps>({
+  } = useForm<RegisterProps>({
     criteriaMode: "all",
     mode: "all",
-    resolver: zodResolver(schemaLogin),
+    resolver: zodResolver(schemaRegister),
     defaultValues: {
       email: "",
       password: "",
     },
   });
 
-  const router = useRouter();
-
-  const handleFormSubmit = async ({ email, password }: LoginProps) => {
-    const result = await signIn("credentials", {
-      email,
-      password,
-      redirect: false,
-    });
-
-    if (result?.error) {
-      toast.error("Erro ao entrar! Usuário ao senha inválidos!", {
-        id: "error",
-      });
+  const handleFormSubmit = async ({ name, email, password }: RegisterProps) => {
+    const { user, message } = await createUser(name, email, password);
+    if (!user) {
+      toast.error(message, { id: "error" });
       return;
     }
-
-    router.replace("/books");
-  };
-
-  const login = async () => {
-    const result = await signIn("credentials", {
-      email: "demo@example.com",
-      password: "123456",
-      redirect: false,
-    });
-
-    router.replace("/books");
+    toast.success(message, { id: "success" });
+    setTimeout(() => {
+      router.replace("/");
+    }, 2000);
   };
 
   return (
@@ -61,6 +48,14 @@ export default function Form() {
         onSubmit={handleSubmit(handleFormSubmit)}
         className="flex flex-col w-[500px] mt-36 gap-3"
       >
+        <Input
+          {...register("name")}
+          type="text"
+          placeholder="Digite seu nome"
+          label="Nome"
+          startAdornment={<User />}
+        />
+        {errors.name && <p className="text-red-500">{errors.name.message}</p>}
         <Input
           {...register("email")}
           type="text"
@@ -84,16 +79,12 @@ export default function Form() {
           className="bg-[#1fe6dd] p-[6px] rounded-md mt-2 text-white text-xl"
           type="submit"
         >
-          Entrar
+          Cadastrar
         </button>
+        <Link href="/" className="p-[6px] text-xl rounded-md mt-2 text-center">
+          Ja possui conta?
+        </Link>
       </form>
-      <div className="bg-gray-500 h-[1px] mt-2"></div>
-      <button
-        className="w-[500px] bg-[#1fe6dd] p-[6px] rounded-md mt-2 text-white text-xl"
-        onClick={login}
-      >
-        Entrar sem login
-      </button>
     </div>
   );
 }

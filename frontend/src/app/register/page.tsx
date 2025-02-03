@@ -1,5 +1,5 @@
 import { Alumni_Sans } from "next/font/google";
-import RegisterForm from "./components/form";
+import RegisterForm from "../../components/form-register";
 
 const font = Alumni_Sans({
   weight: "800",

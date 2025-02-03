@@ -1,6 +1,6 @@
 "use client";
 
-import { deleteBook } from "@/app/api/book/route";
+import { deleteBook } from "@/actions/book/book-actions";
 import { Trash } from "phosphor-react";
 import toast, { Toaster } from "react-hot-toast";
 

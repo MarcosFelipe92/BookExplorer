@@ -1,7 +1,7 @@
 "use client";
 
-import { createBook } from "@/app/api/book/route";
-import { Author } from "@/app/api/book/types";
+import { createBook } from "@/actions/book/book-actions";
+import { Author } from "@/actions/book/types";
 import { Heart } from "phosphor-react";
 import toast, { Toaster } from "react-hot-toast";
 

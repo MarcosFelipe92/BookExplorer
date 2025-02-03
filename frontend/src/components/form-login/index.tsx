@@ -1,38 +1,57 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { EnvelopeSimple, LockSimple, User } from "phosphor-react";
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { EnvelopeSimple, LockSimple } from "phosphor-react";
 import { useForm } from "react-hook-form";
 import toast, { Toaster } from "react-hot-toast";
+import { Input } from "../input";
+import { schemaLogin } from "./schema";
+import { LoginProps } from "./type";
 
-import { createUser } from "@/app/api/user/route";
-import { Input } from "@/components/input";
-import Link from "next/link";
-import { schemaRegister } from "./schema";
-import { RegisterProps } from "./type";
-
-export default function RegisterForm() {
+export default function FormLogin() {
   const {
     handleSubmit,
     register,
     formState: { errors },
-  } = useForm<RegisterProps>({
+  } = useForm<LoginProps>({
     criteriaMode: "all",
     mode: "all",
-    resolver: zodResolver(schemaRegister),
+    resolver: zodResolver(schemaLogin),
     defaultValues: {
       email: "",
       password: "",
     },
   });
 
-  const handleFormSubmit = async ({ name, email, password }: RegisterProps) => {
-    const { user, message } = await createUser(name, email, password);
-    if (!user) {
-      toast.error(message, { id: "error" });
+  const router = useRouter();
+
+  const handleFormSubmit = async ({ email, password }: LoginProps) => {
+    const result = await signIn("credentials", {
+      email,
+      password,
+      redirect: false,
+    });
+
+    if (result?.error) {
+      toast.error("Erro ao entrar! Usuário ao senha inválidos!", {
+        id: "error",
+      });
       return;
     }
-    toast.success(message, { id: "success" });
+
+    router.replace("/books");
+  };
+
+  const login = async () => {
+    await signIn("credentials", {
+      email: "demo@example.com",
+      password: "123456",
+      redirect: false,
+    });
+
+    router.replace("/books");
   };
 
   return (
@@ -42,14 +61,6 @@ export default function RegisterForm() {
         onSubmit={handleSubmit(handleFormSubmit)}
         className="flex flex-col w-[500px] mt-36 gap-3"
       >
-        <Input
-          {...register("name")}
-          type="text"
-          placeholder="Digite seu nome"
-          label="Nome"
-          startAdornment={<User />}
-        />
-        {errors.name && <p className="text-red-500">{errors.name.message}</p>}
         <Input
           {...register("email")}
           type="text"
@@ -73,12 +84,16 @@ export default function RegisterForm() {
           className="bg-[#1fe6dd] p-[6px] rounded-md mt-2 text-white text-xl"
           type="submit"
         >
-          Cadastrar
+          Entrar
         </button>
-        <Link href="/" className="p-[6px] text-xl rounded-md mt-2 text-center">
-          Ja possui conta?
-        </Link>
       </form>
+      <div className="bg-gray-500 h-[1px] mt-2"></div>
+      <button
+        className="w-[500px] bg-[#1fe6dd] p-[6px] rounded-md mt-2 text-white text-xl"
+        onClick={login}
+      >
+        Entrar sem login
+      </button>
     </div>
   );
 }

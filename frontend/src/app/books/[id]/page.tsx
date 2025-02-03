@@ -1,10 +1,10 @@
 import Image from "next/image";
-import { findGoogleBookDetails } from "../../api/book/route";
-import { BackButton } from "@/app/books/components/backButton";
-import { FavoritesButton } from "@/app/books/components/favoriteButton";
+import { BackButton } from "@/components/back-button";
+import { FavoritesButton } from "@/components/favorite-button";
 import { getServerSession } from "next-auth";
-import { nextAuthOptions } from "@/app/api/auth/[...nextauth]/route";
 import { SessionType } from "../types";
+import { nextAuthOptions } from "@/next-auth-options";
+import { findGoogleBookDetails } from "@/actions/book/book-actions";
 
 export default async function BookDetails({
   params,

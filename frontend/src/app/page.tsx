@@ -1,5 +1,5 @@
-import Form from "@/components/form";
-import { Alumni_Sans, Sedan } from "next/font/google";
+import FormLogin from "@/components/form-login";
+import { Alumni_Sans } from "next/font/google";
 import Link from "next/link";
 
 const font = Alumni_Sans({
@@ -22,7 +22,7 @@ export default function Login() {
         </h1>
       </div>
       <div className="mx-auto mt-[10%] flex flex-col items-center gap-2 ">
-        <Form />
+        <FormLogin />
         <Link
           href="/register"
           className="p-[6px] text-xl rounded-md mt-2 text-center"
