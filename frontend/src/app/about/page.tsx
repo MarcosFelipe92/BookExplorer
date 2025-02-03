@@ -17,10 +17,7 @@ export default function About() {
           muito mais. No BookExplorer, nosso objetivo é facilitar a exploração
           de novos livros e autores. No entanto, observe que, embora forneçamos
           informações detalhadas e links para compra, a leitura direta dos
-          livros na nossa plataforma não é possível. Estamos constantemente
-          trabalhando para melhorar e expandir nossos serviços. Sua jornada
-          literária é importante para nós. Explore, descubra e apaixone-se por
-          novos livros com o BookExplorer.
+          livros na nossa plataforma não é possível.
         </p>
         <div className="flex justify-center my-4">
           <Image

@@ -2,8 +2,9 @@
 
 import { createBook } from "@/actions/book/book-actions";
 import { Author } from "@/actions/book/types";
-import { Heart } from "phosphor-react";
+import { Heart, HeartStraight } from "phosphor-react";
 import toast, { Toaster } from "react-hot-toast";
+import { useState } from "react";
 
 type FavoritesButtonProps = {
   className?: string;
@@ -55,6 +56,8 @@ type FavoritesButtonProps = {
 };
 
 export const FavoritesButton = ({ className, book }: FavoritesButtonProps) => {
+  const [isFavorite, setIsFavorite] = useState<boolean>(false);
+
   const authors = book.volumeInfo.authors?.map((author) => ({
     name: author,
   })) as Author[];
@@ -72,14 +75,22 @@ export const FavoritesButton = ({ className, book }: FavoritesButtonProps) => {
       book.userId
     );
     if (res) {
-      toast.success("Livro adicionado aos favoritos");
+      setIsFavorite(!isFavorite);
+      toast.success(
+        isFavorite
+          ? "Livro removido dos favoritos"
+          : "Livro adicionado aos favoritos"
+      );
     }
   };
 
   return (
     <button className={className} onClick={handleClick}>
-      <Toaster />
-      <Heart />
+      {isFavorite ? (
+        <Heart size={32} color="#eab308" weight="fill" />
+      ) : (
+        <HeartStraight size={32} color="gray" weight="regular" />
+      )}
     </button>
   );
 };
