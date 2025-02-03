@@ -50,7 +50,7 @@ export default function SearchForm({ onSearch }: SearchFormProps) {
         {errors.title && <p className="text-red-500">{errors.title.message}</p>}
         <Input
           {...register("author")}
-          type="author"
+          type="text"
           placeholder="autor"
           startAdornment={<User />}
         />
